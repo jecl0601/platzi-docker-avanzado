@@ -1,0 +1,21 @@
+name: Docker CI
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v3
+    - name: Login to docker hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build docker image
+      run: docker build --platform linux --tag jcaceres0601/website:latest -f CI/Dockerfile .
+    - name: Publish docker image
+      run: docker push jcaceres0601/website:latest
